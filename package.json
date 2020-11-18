@@ -1,0 +1,46 @@
+{
+  "name": "material-frame-io",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "nuxt-ts",
+    "build": "nuxt-ts build",
+    "start": "nuxt-ts start",
+    "generate": "nuxt-ts generate"
+  },
+  "dependencies": {
+    "@nuxt/typescript-runtime": "^2.0.0",
+    "@nuxtjs/axios": "^5.12.2",
+    "@nuxtjs/composition-api": "^0.13.5",
+    "bcrypt": "^5.0.0",
+    "body-parser": "^1.19.0",
+    "canvas": "^2.6.1",
+    "cloudinary": "^1.23.0",
+    "consola": "^2.15.0",
+    "cookie-parser": "^1.4.5",
+    "core-js": "^3.6.5",
+    "cors": "^2.8.5",
+    "dotenv": "^8.2.0",
+    "email-validator": "^2.0.4",
+    "env": "^0.0.2",
+    "express-jwt": "^6.0.0",
+    "express-unless": "^0.5.0",
+    "express-validator": "^6.6.1",
+    "fluent-ffmpeg": "^2.1.2",
+    "install": "^0.13.0",
+    "is-jpg": "^2.0.0",
+    "jsonwebtoken": "^8.5.1",
+    "merge-images": "^2.0.0",
+    "multer": "^1.4.2",
+    "npm": "^6.14.8",
+    "nuxt": "^2.14.6",
+    "pg": "^8.4.2",
+    "sequelize": "^6.3.5",
+    "sharp": "^0.26.2"
+  },
+  "devDependencies": {
+    "@nuxt/types": "^2.14.7",
+    "@nuxt/typescript-build": "^2.0.3",
+    "@nuxtjs/vuetify": "^1.11.2"
+  }
+}

@@ -1,0 +1,8 @@
+CREATE DATABASE eyeapprove;
+
+CREATE TABLE users(
+  user_id SERIAL PRIMARY KEY,
+  email VARCHAR ( 255 ) UNIQUE NOT NULL,
+  password VARCHAR ( 50 ) NOT NULL,
+  created_on TIMESTAMP NOT NULL
+);
