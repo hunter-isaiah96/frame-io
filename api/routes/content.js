@@ -31,9 +31,39 @@ const storage = multer.diskStorage({
   },
   filename: function (req, file, cb) {
     cb(null, `${req.user.id}_${req.user.email.split('@')[0]}_${file.originalname.split('.')[0].replace(/[^a-zA-Z0-9]/g, '')}_${Date.now()}.${file.mimetype.split('/')[1]}`); //Appending .jpg
+  },
+});
+const upload = multer({
+  storage,
+  fileFilter: async function (req, file, cb) {
+    try {
+      const user = await User.findOne({ where: { id: req.user.id } });
+      if (!user) {
+        req.fileValidationError = 'User does not exist';
+        return cb(null, false, req.fileValidationError);
+      }
+      if (req.body.id) {
+        const originalContent = await Content.findOne({ where: { id: req.body.id } });
+        if (originalContent) {
+          if (file.mimetype.split('/')[0] != originalContent.dataValues.type) {
+            req.fileValidationError = 'Content type must be the same';
+            return cb(null, false, req.fileValidationError);
+          } else {
+            return cb(null, true);
+          }
+        } else {
+          req.fileValidationError = 'Content not found';
+          return cb(null, false, req.fileValidationError, false);
+        }
+      } else {
+        return cb(null, true);
+      }
+
+    } catch (e) {
+      console.log(e);
+    }
   }
 });
-const upload = multer({ storage });
 
 const deleteFiles = (files) => new Promise((resolve, reject) => {
   var i = files.length;
@@ -50,7 +80,7 @@ const deleteFiles = (files) => new Promise((resolve, reject) => {
   });
 });
 
-const uploadMedia = (file, user) => new Promise(async (resolve, reject) => {
+const uploadMedia = (file) => new Promise(async (resolve, reject) => {
   let filesToDelete = [];
   const takeScreenshots = () => new Promise((resolve, reject) => {
     ffmpeg(file.path)
@@ -59,6 +89,9 @@ const uploadMedia = (file, user) => new Promise(async (resolve, reject) => {
       })
       .on('end', function () {
         resolve(null);
+      })
+      .on('error', function (err) {
+        reject(err);
       })
       // Limit is 30 because of some fuck shit
       .screenshots({
@@ -111,41 +144,47 @@ const uploadMedia = (file, user) => new Promise(async (resolve, reject) => {
     }
   } catch (e) {
     await deleteFiles(filesToDelete);
+    reject(e);
   }
 });
 
-router.get('/', function (req, res) {
+router.get('/', jwtMiddleWare, async function (req, res) {
+  try {
+    const allContent = await Content.findAll({ where: { user_id: req.user.id }, include: [
+      {
+        model: User,
+        as: 'content'
+      }
+    ]});
+    console.log(allContent)
+  } catch (e) {
+    console.log(e)
+  }
 });
 
-router.post('/', jwtMiddleWare,  async function (req, res) {
+router.post('/new', jwtMiddleWare, upload.single('content'), async function (req, res) {
+  if (req.fileValidationError) {
+    return res.status(400).json({
+      success: false,
+      message: req.fileValidationError
+    });
+  }
   const { id } = req.body;
   try {
-    const user = await User.findOne({ where: { id: req.user.id } });
-    if (!user) {
-      throw new Error('Sike');
-    }
     // START Content Builder Setup
     const contentBuilder = {
-      created_by: req.user.id
+      user_id: req.user.id
     };
     if (req.body.id) {
-      const originalContent = await Content.findOne({ where: { id } });
-      if (!originalContent) {
-        throw new Error('Could not find this content');
-      } else if (req.file.mimetype.split('/')[0] != originalContent.dataValues.type) {
-        throw new Error('Content type must be the same');
-      }
-      
       const versionNumber = await Content.count({ where: { original_content_id: id } });
       contentBuilder.version = versionNumber + 2;
-      contentBuilder.original_content_id = id;
+      contentBuilder.ContentId = id;
     }
-    await uploadFile();
     const upload = await uploadMedia(req.file);
     contentBuilder.type = upload.media.resource_type;
     contentBuilder.media = upload;
     // END Content Builder Setup
-    const content = Content.create(contentBuilder);
+    const content = await Content.create(contentBuilder);
     return res.status(201).json({
       success: true,
       message: req.body.id ? 'Uploaded New Version!' : 'Created New Content!',

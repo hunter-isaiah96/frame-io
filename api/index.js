@@ -8,7 +8,7 @@ import contentRoutes from './routes/content';
 import commentRoutes from './routes/comment';
 import db from './db';
 
-db.authenticate().then(() => console.log('Connected'))
+db.sync().then(() => console.log('Connected'))
 .catch(err => console.log('Error: ' + err));
 
 const app = express();

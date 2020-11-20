@@ -1,20 +1,18 @@
 import Sequelize from 'sequelize';
 import db from '../db';
+import Comment from './Comment';
+import User from './User';
 
 const Content = db.define('content', {
+  user_id: {
+    type: Sequelize.INTEGER,
+    allowNull: false,
+  },
   type: {
     type: Sequelize.STRING(15),
     allowNull: false,
   },
-  created_by: {
-    type: Sequelize.INTEGER,
-    allowNull: false,
-  },
   version: {
-    type: Sequelize.INTEGER,
-    allowNull: true
-  },
-  original_content_id: {
     type: Sequelize.INTEGER,
     allowNull: true
   },
@@ -36,5 +34,22 @@ const Content = db.define('content', {
   timestamps: false,
   freezeTableName: true
 });
+
+Content.associate = models => { 
+  models.Content.belongsTo(models.User, {foreignKey: 'user_id', as: 'User'})
+}
+
+// Content.belongsTo(User, {
+//   as: 'User',
+//   foreignKey: 'user_id'
+// });
+
+// Content.hasMany(Comment, {
+//   as: 'comments'
+// });
+
+// Content.hasMany(Content, {
+//   as: 'content'
+// });
 
 module.exports = Content;

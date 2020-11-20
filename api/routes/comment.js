@@ -1,6 +1,7 @@
 import express from 'express';
 import expressJwt from 'express-jwt'
 import Comment from '../models/Comment'
+import Content from '../models/Content';
 
 const router = express.Router()
 
@@ -14,8 +15,9 @@ const jwtMiddleWare = expressJwt({
 })
 
 router.post('/', jwtMiddleWare, (req, res) => {
-  const { title, timestamp, meta_data, content_id, reply_to } = req.body
+  const { text, timestamp, meta_data, content_id, reply_to } = req.body
   try {
+    Content.find()
     const comment = Comment.create({
       text: req.body
     })
