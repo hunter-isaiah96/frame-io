@@ -2,7 +2,7 @@ import Sequelize from 'sequelize'
 
 module.exports = new Sequelize('eyeapprove', 'postgres', 'isaiah', {
   host:'localhost',
-  dialect: 'postgres'
+  dialect: 'postgres' 
 })
 // const Pool = require('pg').Pool
 
