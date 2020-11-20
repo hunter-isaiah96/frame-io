@@ -7,19 +7,12 @@ const Comment = db.define('comment', {
     allowNull: false
   },
   timestamp: {
-    type: Sequelize.NUMBER,
-    allowNull: false
+    type: Sequelize.INTEGER,
+    allowNull: true,
+    default: null
   },
   meta_data: {
     type: Sequelize.JSON,
-    allowNull: false
-  },
-  created_by: {
-    type: Sequelize.INTEGER,
-    allowNull: false
-  },
-  content_id: {
-    type: Sequelize.INTEGER,
     allowNull: false
   },
   reply_to: {
@@ -43,5 +36,18 @@ const Comment = db.define('comment', {
 }, {
   timestamps: false
 });
+
+// Comment.associate = models => {
+//   Comment.belongsTo(models.User, {
+//     foreignKey: {
+//       allowNull: false
+//     }
+//   })
+//   Comment.belongsTo(models.Post, {
+//     foreignKey: {
+//       allowNull: false
+//     }
+//   })
+// }
 
 module.exports = Comment;
