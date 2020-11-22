@@ -38,12 +38,12 @@ router.post('/', [
         message: 'Email or password was not entered correctly'
       });
     }
-    const access_token = jwt.sign({ id: user.dataValues.id, email: user.dataValues.email }, process.env.AUTH_TOKEN_SECRET, { expiresIn: '20d' });
+    const auth_token = jwt.sign({ id: user.dataValues.id, email: user.dataValues.email }, process.env.AUTH_TOKEN_SECRET, { expiresIn: '20d' });
     const refresh_token = jwt.sign({ id: user.dataValues.id, email: user.dataValues.email }, process.env.AUTH_TOKEN_SECRET, { expiresIn: '200d' });
     res.status(201).json({
       success: true,
       message: 'Authenticated',
-      access_token,
+      auth_token,
       refresh_token
     });
   } catch (err) {
@@ -77,12 +77,12 @@ router.post('/new', [
       email,
       hashed_password,
     })
-    const access_token = jwt.sign({ id: user.dataValues.id, email: user.dataValues.email }, process.env.AUTH_TOKEN_SECRET, { expiresIn: '20d' });
+    const auth_token = jwt.sign({ id: user.dataValues.id, email: user.dataValues.email }, process.env.AUTH_TOKEN_SECRET, { expiresIn: '20d' });
     const refresh_token = jwt.sign({ id: user.dataValues.id }, process.env.AUTH_TOKEN_SECRET, { expiresIn: '200d' });
     res.status(201).json({
       success: true,
       message: 'User Created!',
-      access_token,
+      auth_token,
       refresh_token
     });
   } catch (err) {

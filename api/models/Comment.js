@@ -2,6 +2,12 @@ import Sequelize from 'sequelize';
 import db from '../db';
 
 const Comment = db.define('comment', {
+  id: {
+    allowNull: false,
+    autoIncrement: true,
+    primaryKey: true,
+    type: Sequelize.INTEGER
+  },
   text: {
     type: Sequelize.STRING,
     allowNull: false

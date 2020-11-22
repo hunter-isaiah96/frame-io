@@ -4,8 +4,18 @@ import Comment from './Comment';
 import User from './User';
 
 const Content = db.define('content', {
+  id: {
+    allowNull: false,
+    autoIncrement: true,
+    primaryKey: true,
+    type: Sequelize.INTEGER
+  },
   user_id: {
     type: Sequelize.INTEGER,
+    references: {
+      model: User,
+      key: 'id'
+    },
     allowNull: false,
   },
   type: {
@@ -35,8 +45,8 @@ const Content = db.define('content', {
   freezeTableName: true
 });
 
-Content.associate = models => { 
-  models.Content.belongsTo(models.User, {foreignKey: 'user_id', as: 'User'})
+Content.associate = function(models) { 
+  Content.belongsTo(models.users, { foreignKey: 'user_id', as: 'user' })
 }
 
 // Content.belongsTo(User, {

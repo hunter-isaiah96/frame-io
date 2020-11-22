@@ -115,7 +115,7 @@ export default defineComponent({
           });
           const result = await response.json();
           if (result.success) {
-            document.cookie = `access_token=${result.access_token}`
+            document.cookie = `auth_token=${result.auth_token}`
             localStorage.setItem('refresh_token', result.refresh_token)
             alert("Successful Login");
           }

@@ -7,9 +7,10 @@ import fs from 'fs';
 import Content from '../models/Content';
 import User from '../models/User';
 
+const screenShotCount = 100
+
 const jwtMiddleWare = expressJwt({
   secret: process.env.AUTH_TOKEN_SECRET,
-  credentialsRequired: false,
   algorithms: ['HS256'],
   getToken: (req) => {
     return req.cookies.auth_token || null;
@@ -35,6 +36,9 @@ const storage = multer.diskStorage({
 });
 const upload = multer({
   storage,
+  // limits: {
+  //   fileSize: (1024 * 1024) *  1 // 100mb File Size
+  // },
   fileFilter: async function (req, file, cb) {
     try {
       const user = await User.findOne({ where: { id: req.user.id } });
@@ -88,14 +92,16 @@ const uploadMedia = (file) => new Promise(async (resolve, reject) => {
         filesToDelete = filenames.map(x => `thumbs/${x}`);
       })
       .on('end', function () {
+        
         resolve(null);
       })
       .on('error', function (err) {
+        console.log(err)
         reject(err);
       })
       // Limit is 30 because of some fuck shit
       .screenshots({
-        count: 30,
+        count: screenShotCount,
         folder: 'thumbs/',
         filename: `${file.filename.split('.')[0]}_%00i.jpg`,
         size: '240x135'
@@ -115,7 +121,7 @@ const uploadMedia = (file) => new Promise(async (resolve, reject) => {
         });
       })
       .complexFilter([
-        'tile=1x30'
+        `tile=1x${screenShotCount}`
       ])
       .output(`thumbs/${file.filename.split('.')[0]}.jpg`).run();
   });
@@ -136,6 +142,7 @@ const uploadMedia = (file) => new Promise(async (resolve, reject) => {
       await deleteFiles(filesToDelete);
       return resolve({ media });
     } else if (file.mimetype.split('/')[0] == 'video') {
+      console.log('video')
       await takeScreenshots();
       const previewStrip = await createStrip();
       const media = await uploadToCloudinary();
@@ -150,12 +157,12 @@ const uploadMedia = (file) => new Promise(async (resolve, reject) => {
 
 router.get('/', jwtMiddleWare, async function (req, res) {
   try {
-    const allContent = await Content.findAll({ where: { user_id: req.user.id }, include: [
-      {
-        model: User,
-        as: 'content'
+    const allContent = await Content.findAll({ where: { user_id: req.user.id }, include: [{
+      model: User,
+      where: {
+      user_id: 1
       }
-    ]});
+  }]});
     console.log(allContent)
   } catch (e) {
     console.log(e)

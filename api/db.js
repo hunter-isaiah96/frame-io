@@ -1,6 +1,6 @@
 import Sequelize from 'sequelize'
 
-module.exports = new Sequelize('eyeapprove', 'postgres', 'isaiah', {
+module.exports = new Sequelize(process.env.POSTGRES_DB, process.env.POSTGRES_USER, process.env.POSTGRES_PASSWORD, {
   host:'localhost',
   dialect: 'postgres' 
 })
