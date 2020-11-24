@@ -4,10 +4,11 @@ import cloudinaryModule from 'cloudinary';
 import expressJwt from 'express-jwt';
 import ffmpeg from 'fluent-ffmpeg';
 import fs from 'fs';
-import Content from '../models/Content';
-import User from '../models/User';
+import db from '../db'
 
-const screenShotCount = 100
+const Content = db.contents
+const User = db.users
+const screenShotCount = 40
 
 const jwtMiddleWare = expressJwt({
   secret: process.env.AUTH_TOKEN_SECRET,
@@ -36,9 +37,9 @@ const storage = multer.diskStorage({
 });
 const upload = multer({
   storage,
-  // limits: {
-  //   fileSize: (1024 * 1024) *  1 // 100mb File Size
-  // },
+  limits: {
+    fileSize: (1024 * 1024) * 100 // 100mb File Size
+  },
   fileFilter: async function (req, file, cb) {
     try {
       const user = await User.findOne({ where: { id: req.user.id } });
@@ -92,7 +93,7 @@ const uploadMedia = (file) => new Promise(async (resolve, reject) => {
         filesToDelete = filenames.map(x => `thumbs/${x}`);
       })
       .on('end', function () {
-        
+
         resolve(null);
       })
       .on('error', function (err) {
@@ -155,15 +156,28 @@ const uploadMedia = (file) => new Promise(async (resolve, reject) => {
   }
 });
 
+router.delete('/all', async function (req, res) {
+
+})
+
 router.get('/', jwtMiddleWare, async function (req, res) {
   try {
-    const allContent = await Content.findAll({ where: { user_id: req.user.id }, include: [{
-      model: User,
-      where: {
-      user_id: 1
-      }
-  }]});
-    console.log(allContent)
+    const allContent = await User.findAll({
+      where: { id: req.user.id }, include: [{
+        model: Content,
+        as: 'content',
+        // attributes: ['email']
+      }]
+    });
+    // const allContent = await Content.findAll({ where: { userId: req.user.id }, include: [{
+    //   model: User,
+    //   as: 'user',
+    //   attributes: ['email']
+    // }]});
+    return res.status(200).json({
+      success: true,
+      data: allContent
+    })
   } catch (e) {
     console.log(e)
   }
@@ -180,7 +194,7 @@ router.post('/new', jwtMiddleWare, upload.single('content'), async function (req
   try {
     // START Content Builder Setup
     const contentBuilder = {
-      user_id: req.user.id
+      userId: req.user.id
     };
     if (req.body.id) {
       const versionNumber = await Content.count({ where: { original_content_id: id } });
