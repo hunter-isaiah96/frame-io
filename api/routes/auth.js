@@ -1,9 +1,10 @@
 import express from 'express';
 import bcrypt from 'bcrypt';
-import User from '../models/User'
 import { body,query, validationResult } from 'express-validator';
 import jwt from 'jsonwebtoken';
+import db from '../db'
 
+const User = db.users
 const router = express.Router();
 
 async function checkPasswordMatch(password, hash) {
@@ -87,12 +88,13 @@ router.post('/new', [
     });
   } catch (err) {
   
-    if(err.original.code == 23505) {
-      return res.status(400).json({
-        success: false,
-        message: 'This account already exists'
-      })
-    }
+    console.log(err)
+    // if(err.original.code == 23505) {
+    //   return res.status(400).json({
+    //     success: false,
+    //     message: 'This account already exists'
+    //   })
+    // }
     res.status(400).json({
       success: false,
       error: err

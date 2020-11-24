@@ -8,9 +8,9 @@ import contentRoutes from './routes/content';
 import commentRoutes from './routes/comment';
 import db from './db';
 
-db.sync().then(() => console.log('Connected'))
-.catch(err => console.log('Error: ' + err));
+db.sequelize.sync().then(() => {
 
+});
 const app = express();
 app.use(cors());
 app.use(express.json({ limit: '10mb' }));
