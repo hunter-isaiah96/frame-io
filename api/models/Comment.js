@@ -12,6 +12,6 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.JSON,
             allowNull: true,
         }
-    })
+    });
     return Comment;
 };

@@ -4,11 +4,11 @@ import cloudinaryModule from 'cloudinary';
 import expressJwt from 'express-jwt';
 import ffmpeg from 'fluent-ffmpeg';
 import fs from 'fs';
-import db from '../db'
+import db from '../db';
 
-const Content = db.contents
-const User = db.users
-const screenShotCount = 40
+const Content = db.contents;
+const User = db.users;
+const screenShotCount = 40;
 
 const jwtMiddleWare = expressJwt({
   secret: process.env.AUTH_TOKEN_SECRET,
@@ -97,7 +97,7 @@ const uploadMedia = (file) => new Promise(async (resolve, reject) => {
         resolve(null);
       })
       .on('error', function (err) {
-        console.log(err)
+        console.log(err);
         reject(err);
       })
       // Limit is 30 because of some fuck shit
@@ -143,7 +143,7 @@ const uploadMedia = (file) => new Promise(async (resolve, reject) => {
       await deleteFiles(filesToDelete);
       return resolve({ media });
     } else if (file.mimetype.split('/')[0] == 'video') {
-      console.log('video')
+      console.log('video');
       await takeScreenshots();
       const previewStrip = await createStrip();
       const media = await uploadToCloudinary();
@@ -158,7 +158,7 @@ const uploadMedia = (file) => new Promise(async (resolve, reject) => {
 
 router.delete('/all', async function (req, res) {
 
-})
+});
 
 router.get('/', jwtMiddleWare, async function (req, res) {
   try {
@@ -181,9 +181,9 @@ router.get('/', jwtMiddleWare, async function (req, res) {
     return res.status(200).json({
       success: true,
       data: allContent
-    })
+    });
   } catch (e) {
-    console.log(e)
+    console.log(e);
   }
 });
 
