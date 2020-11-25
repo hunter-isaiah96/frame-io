@@ -6,12 +6,12 @@ WORKDIR /app
 ENV PATH /app/node_modules/.bin:$PATH
 # update and install dependency
 RUN apk update && apk upgrade
-RUN apk add git g++ make python
+RUN apk add git g++ make python ffmpeg
 
 # copy the app, note .dockerignore
 COPY package.json /app
 COPY . /app
-RUN yarn 
+RUN yarn install
 
 EXPOSE 3000
 EXPOSE 5432

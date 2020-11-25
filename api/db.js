@@ -16,6 +16,7 @@ db.contents.belongsTo(db.users, {
   foreignKey: "userId",
   as: "user",
 });
+
 db.contents.belongsTo(db.contents, {
   foreignKey: "contentId",
   as: "versions",
