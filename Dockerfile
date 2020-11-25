@@ -1,17 +1,17 @@
-FROM node:14.15.1-alpine
+FROM node:12.13.1-alpine
 
 # create destination directory
-RUN mkdir -p /usr/src/nuxt-app
-WORKDIR /usr/src/nuxt-app
-
+RUN mkdir -p /app
+WORKDIR /app
+ENV PATH /app/node_modules/.bin:$PATH
 # update and install dependency
 RUN apk update && apk upgrade
-RUN apk add git
-RUN apk add g++ make python
+RUN apk add git g++ make python
 
 # copy the app, note .dockerignore
-COPY . /usr/src/nuxt-app/
-RUN yarn install
+COPY package.json /app
+COPY . /app
+RUN yarn 
 
 EXPOSE 3000
 EXPOSE 5432

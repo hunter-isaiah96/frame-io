@@ -8,7 +8,7 @@ import contentRoutes from './routes/content';
 import commentRoutes from './routes/comment';
 import db from './db';
 
-db.sequelize.sync().then(() => {
+db.sequelize.sync({ force: true }).then(() => {
 
 });
 const app = express();

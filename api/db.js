@@ -1,6 +1,6 @@
 import Sequelize from 'sequelize'
 const sequelize = new Sequelize(process.env.POSTGRES_DB, process.env.POSTGRES_USER, process.env.POSTGRES_PASSWORD, {
-  host:'localhost',
+  host:'postgres_container',
   dialect: 'postgres' 
 })
 const db = {}
@@ -16,6 +16,10 @@ db.contents.belongsTo(db.users, {
   foreignKey: "userId",
   as: "user",
 });
+db.contents.belongsTo(db.contents, {
+  foreignKey: "contentId",
+  as: "versions",
+})
 
 module.exports = db
 

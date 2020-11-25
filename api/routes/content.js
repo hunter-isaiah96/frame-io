@@ -166,6 +166,10 @@ router.get('/', jwtMiddleWare, async function (req, res) {
       where: { id: req.user.id }, include: [{
         model: Content,
         as: 'content',
+        include: [{
+          model: Content,
+          as: 'versions'
+        }]
         // attributes: ['email']
       }]
     });
@@ -197,9 +201,9 @@ router.post('/new', jwtMiddleWare, upload.single('content'), async function (req
       userId: req.user.id
     };
     if (req.body.id) {
-      const versionNumber = await Content.count({ where: { original_content_id: id } });
+      const versionNumber = await Content.count({ where: { contentId: id } });
       contentBuilder.version = versionNumber + 2;
-      contentBuilder.ContentId = id;
+      contentBuilder.contentId = id;
     }
     const upload = await uploadMedia(req.file);
     contentBuilder.type = upload.media.resource_type;
@@ -212,7 +216,6 @@ router.post('/new', jwtMiddleWare, upload.single('content'), async function (req
       data: content.dataValues
     });
   } catch (e) {
-    console.log(e);
     return res.status(400).json({
       success: false,
       message: e,
