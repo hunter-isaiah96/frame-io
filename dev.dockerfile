@@ -1,6 +1,7 @@
 FROM node:alpine3.12
 
 # container filesystem config
+ADD . /app
 WORKDIR /app
 ENV HOST 0.0.0.0
 
