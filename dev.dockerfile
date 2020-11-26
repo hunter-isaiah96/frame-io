@@ -7,7 +7,7 @@ ENV HOST 0.0.0.0
 # reduce shell operations to a single layer
 RUN apk update && \
     apk upgrade && \
-    apk add g++ make python && \
+    apk add g++ make python3 && \
     apk add git ffmpeg && \
     yarn set version berry && \
     yarn install 
