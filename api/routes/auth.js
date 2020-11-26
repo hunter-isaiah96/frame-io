@@ -85,18 +85,10 @@ router.post('/new', [
       auth_token,
       refresh_token
     });
-  } catch (err) {
-  
-    console.log(err)
-    // if(err.original.code == 23505) {
-    //   return res.status(400).json({
-    //     success: false,
-    //     message: 'This account already exists'
-    //   })
-    // }
+  } catch (e) {
     res.status(400).json({
       success: false,
-      error: err
+      error: e.message
     })
   }
 });
@@ -122,7 +114,7 @@ router.get('/checkemail', [
       exists: !!user
     });
   } catch (err) {
-    res.json(err);
+    res.status(400).json(err);
   }
 });
 

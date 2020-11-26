@@ -17,6 +17,5 @@ module.exports = (sequelize, DataTypes) => {
             allowNull: true,
         }
     });
-    // Comment.hasMany
     return Comment;
 };
