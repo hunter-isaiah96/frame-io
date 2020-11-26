@@ -6,8 +6,8 @@ import ffmpeg from 'fluent-ffmpeg';
 import fs from 'fs';
 import db from '../db';
 
-const Content = db.contents;
-const User = db.users;
+const Content = db.Content;
+const User = db.User;
 const screenShotCount = 40;
 
 const jwtMiddleWare = expressJwt({
@@ -28,10 +28,10 @@ cloudinary.config({
 const router = express.Router();
 
 const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
+  destination: (req, file, cb) => {
     cb(null, 'uploads/');
   },
-  filename: function (req, file, cb) {
+  filename: (req, file, cb) => {
     cb(null, `${req.user.id}_${req.user.email.split('@')[0]}_${file.originalname.split('.')[0].replace(/[^a-zA-Z0-9]/g, '')}_${Date.now()}.${file.mimetype.split('/')[1]}`); //Appending .jpg
   },
 });
@@ -160,12 +160,13 @@ router.delete('/all', async function (req, res) {
 
 });
 
-router.get('/', jwtMiddleWare, async function (req, res) {
+router.get('/', jwtMiddleWare, async (req, res) => {
   try {
     const allContent = await User.findAll({
       where: { id: req.user.id }, include: [{
         model: Content,
         as: 'content',
+        exclude: ['media'],
         include: [{
           model: Content,
           as: 'versions'
@@ -187,7 +188,7 @@ router.get('/', jwtMiddleWare, async function (req, res) {
   }
 });
 
-router.post('/new', jwtMiddleWare, upload.single('content'), async function (req, res) {
+router.post('/new', jwtMiddleWare, upload.single('content'), async (req, res) => {
   if (req.fileValidationError) {
     return res.status(400).json({
       success: false,
@@ -207,7 +208,7 @@ router.post('/new', jwtMiddleWare, upload.single('content'), async function (req
     }
     const upload = await uploadMedia(req.file);
     contentBuilder.type = upload.media.resource_type;
-    contentBuilder.media = upload;
+    contentBuilder.media = upload.media;
     // END Content Builder Setup
     const content = await Content.create(contentBuilder);
     return res.status(201).json({

@@ -8,6 +8,10 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING(15),
       allowNull: false,
     },
+    contentId: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+    },
     version: {
       type: DataTypes.INTEGER,
       allowNull: true
@@ -16,7 +20,18 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.JSON,
       allowNull: false
     },
-  })
+  });
+
+  // Content.associate = function(models) {
+  //   Content.belongsTo(models.user, {
+  //     foreignKey: "userId",
+  //     as: "user",
+  //   });
+  //   Content.belongsTo(models.content, {
+  //     foreignKey: "contentId",
+  //     as: "versions",
+  //   });
+  // };
   return Content;
 };
 

@@ -4,8 +4,12 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.STRING,
             allowNull: false
         },
+        commentId: {
+            type: DataTypes.INTEGER,
+            allowNull: true,
+        },
         timestamp: {
-            type: DataTypes.NUMBER,
+            type: DataTypes.FLOAT,
             allowNull: true
         },
         file: {
@@ -13,5 +17,6 @@ module.exports = (sequelize, DataTypes) => {
             allowNull: true,
         }
     });
+    // Comment.hasMany
     return Comment;
 };

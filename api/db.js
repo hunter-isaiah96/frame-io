@@ -1,28 +1,43 @@
-import Sequelize from 'sequelize'
+import Sequelize from 'sequelize';
 const sequelize = new Sequelize(process.env.POSTGRES_DB, process.env.POSTGRES_USER, process.env.POSTGRES_PASSWORD, {
-  host:'postgres_container',
-  dialect: 'postgres' 
-})
-const db = {}
+  host: 'postgres_container',
+  dialect: 'postgres'
+});
+const db = {};
 
 db.Sequelize = Sequelize;
 db.sequelize = sequelize;
 
-db.users = require('./models/User')(sequelize, Sequelize)
-db.contents = require('./models/Content')(sequelize, Sequelize)
+const User = require('./models/User')(sequelize, Sequelize);
+const Content = require('./models/Content')(sequelize, Sequelize);
+const Comment = require('./models/Comment')(sequelize, Sequelize);
 
-db.users.hasMany(db.contents, { as: "content" });
-db.contents.belongsTo(db.users, {
+// User Relations
+User.hasMany(Content, { as: 'content' });
+User.hasMany(Comment, { as: 'all_comments' });
+
+// Content Relations
+Content.hasMany(Comment, { as: 'comments'})
+
+Content.belongsTo(User, {
   foreignKey: "userId",
   as: "user",
 });
 
-db.contents.belongsTo(db.contents, {
-  foreignKey: "contentId",
-  as: "versions",
-})
+Content.belongsTo(Content, {
+  foreignKey: "contentId"
+});
 
-module.exports = db
+Content.hasMany(Content, { as: 'versions' })
+
+// Comment Relations
+Comment.hasMany(Comment, { as: 'replies' });
+
+Comment.belongsTo(Comment, { foreignKey: "commentId" });
+
+Comment.belongsTo(User, { foreignKey: "userId" });
+
+module.exports = { User, Content, Comment, db };
 
 // const Pool = require('pg').Pool
 

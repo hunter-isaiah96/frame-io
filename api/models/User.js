@@ -10,5 +10,9 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
     },
   })
+  // User.associate = models => {
+  //   User.hasMany(models.content, { as: "content" });
+  //   User.hasMany(models.comment, { as: "comments" });
+  // }
   return User;
 };

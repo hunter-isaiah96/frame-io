@@ -4,7 +4,7 @@ import { body,query, validationResult } from 'express-validator';
 import jwt from 'jsonwebtoken';
 import db from '../db'
 
-const User = db.users
+const User = db.User
 const router = express.Router();
 
 async function checkPasswordMatch(password, hash) {
@@ -31,7 +31,6 @@ router.post('/', [
     }
     const { email, password } = req.body;
     const user = await User.findOne({where: { email }})
-    console.log(user)
     const passwordMatch = await checkPasswordMatch(password, user.dataValues.hashed_password);
     if (!passwordMatch) {
       return res.status(401).json({
