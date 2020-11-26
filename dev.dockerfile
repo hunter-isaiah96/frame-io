@@ -1,4 +1,4 @@
-FROM node:alpine3.12
+FROM node:14.15.1-alpine
 
 # container filesystem config
 ADD . /app
@@ -9,8 +9,6 @@ ENV HOST 0.0.0.0
 RUN apk update && \
     apk upgrade && \
     apk add g++ make python3 && \
-    apk add git ffmpeg && \
-    yarn set version berry && \
     yarn install 
 
 # allow incoming traffic to the below ports
