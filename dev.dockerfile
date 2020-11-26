@@ -8,10 +8,10 @@ ENV HOST 0.0.0.0
 # reduce shell operations to a single layer
 RUN apk update && \
     apk upgrade && \
-    apk add g++ make python3 && \
-    yarn install 
+    apk add g++ make python3 && \ 
+    npm install
 
 # allow incoming traffic to the below ports
 EXPOSE 3000    
 
-CMD yarn dev
+CMD npm run dev
