@@ -29,7 +29,9 @@ services:
 
   frontend-dev:
     container_name: frontend-dev
-    build: .
+    build:
+      context: .
+      dockerfile: dev.dockerfile
     restart: unless-stopped
     volumes:
       - .:/app
