@@ -1,16 +1,16 @@
-FROM node:14.15.1-alpine
+FROM node:12.13.1-alpine
 
 # create destination directory
-RUN mkdir -p /usr/src/nuxt-app
-WORKDIR /usr/src/nuxt-app
-
+RUN mkdir -p /app
+WORKDIR /app
+ENV PATH /app/node_modules/.bin:$PATH
 # update and install dependency
 RUN apk update && apk upgrade
-RUN apk add git
-RUN apk add g++ make python3
+RUN apk add git g++ make python ffmpeg
 
 # copy the app, note .dockerignore
-COPY . /usr/src/nuxt-app/
+COPY package.json /app
+COPY . /app
 RUN yarn install
 
 EXPOSE 3000
