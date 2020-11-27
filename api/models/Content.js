@@ -8,10 +8,6 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING(15),
       allowNull: false,
     },
-    contentId: {
-      type: DataTypes.INTEGER,
-      allowNull: true,
-    },
     version: {
       type: DataTypes.INTEGER,
       allowNull: true

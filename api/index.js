@@ -6,10 +6,10 @@ import cookieParser from 'cookie-parser';
 import authRoutes from './routes/auth';
 import contentRoutes from './routes/content';
 import commentRoutes from './routes/comment';
-import db from './db';
-db.sequelize.sync({ force: true }).then(() => {
+import { sequelize } from './db';
 
-});
+sequelize.sync({ force: true }).then(() => {});
+
 const app = express();
 app.use(cors());
 app.use(express.json({ limit: '10mb' }));
@@ -18,10 +18,9 @@ app.use(bodyParser.urlencoded({
 }));
 app.use(cookieParser());
 // ROUTES //
-
 app.use('/auth', authRoutes);
 app.use('/content', contentRoutes);
-app.use('/comment', commentRoutes);
+app.use('/comments', commentRoutes);
 
 app.use(function (err, req, res, next) {
   if (err.name === 'UnauthorizedError') {

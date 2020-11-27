@@ -1,6 +1,6 @@
 import express from 'express';
 import bcrypt from 'bcrypt';
-import { body,query, validationResult } from 'express-validator';
+import { body, query, validationResult } from 'express-validator';
 import jwt from 'jsonwebtoken';
 import db from '../db'
 
@@ -30,7 +30,7 @@ router.post('/', [
       });
     }
     const { email, password } = req.body;
-    const user = await User.findOne({where: { email }})
+    const user = await User.findOne({ where: { email } })
     const passwordMatch = await checkPasswordMatch(password, user.dataValues.hashed_password);
     if (!passwordMatch) {
       return res.status(401).json({
@@ -47,7 +47,7 @@ router.post('/', [
       refresh_token
     });
   } catch (err) {
-    res.send(err);
+    res.status(500).send(err);
   }
 });
 
@@ -62,7 +62,7 @@ router.post('/new', [
     return true;
   })
 ], async (req, res) => {
-  
+
   try {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -107,7 +107,7 @@ router.get('/checkemail', [
       });
     }
     const { email } = req.query;
-    const user = await User.findOne({where: { email }})
+    const user = await User.findOne({ where: { email } })
     res.status(200).json({
       success: true,
       status: 200,

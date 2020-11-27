@@ -11,6 +11,7 @@ const Comment = require('./models/Comment')(sequelize, Sequelize);
 // User Relations
 User.hasMany(Content, { as: 'content' });
 User.hasMany(Comment, { as: 'all_comments' });
+// User.belongsTo(Comment, { foreignKey: "replyUserId" })
 
 // Content Relations
 Content.hasMany(Comment, { as: 'comments' })
@@ -32,6 +33,7 @@ Comment.hasMany(Comment, { as: 'replies' });
 Comment.belongsTo(Comment, { foreignKey: "commentId" });
 
 Comment.belongsTo(User, { foreignKey: "userId" });
+Comment.belongsTo(User, { foreignKey: "replyUserId" });
 
 module.exports = {
   User,

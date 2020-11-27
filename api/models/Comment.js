@@ -4,9 +4,9 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.STRING,
             allowNull: false
         },
-        commentId: {
-            type: DataTypes.INTEGER,
-            allowNull: true,
+        metaData: {
+            type: DataTypes.JSON,
+            allowNull: true
         },
         timestamp: {
             type: DataTypes.FLOAT,
