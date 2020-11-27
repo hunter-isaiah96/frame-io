@@ -1,5 +1,5 @@
 export default function ({ store, redirect }) {
-  if (!document.cookie.match(/^(.*;)?\s*access_token\s*=\s*[^;]+(.*)?$/)) {
+  if (!document.cookie.match(/^(.*;)?\s*auth_token\s*=\s*[^;]+(.*)?$/)) {
     return redirect('/login')
   }
 }

@@ -1,10 +1,10 @@
 import express from 'express';
 import bcrypt from 'bcrypt';
-import { body,query, validationResult } from 'express-validator';
+import { body, query, validationResult } from 'express-validator';
 import jwt from 'jsonwebtoken';
 import db from '../db'
 
-const User = db.users
+const User = db.User
 const router = express.Router();
 
 async function checkPasswordMatch(password, hash) {
@@ -30,8 +30,7 @@ router.post('/', [
       });
     }
     const { email, password } = req.body;
-    const user = await User.findOne({where: { email }})
-    console.log(user)
+    const user = await User.findOne({ where: { email } })
     const passwordMatch = await checkPasswordMatch(password, user.dataValues.hashed_password);
     if (!passwordMatch) {
       return res.status(401).json({
@@ -48,7 +47,7 @@ router.post('/', [
       refresh_token
     });
   } catch (err) {
-    res.send(err);
+    res.status(500).send(err);
   }
 });
 
@@ -63,7 +62,7 @@ router.post('/new', [
     return true;
   })
 ], async (req, res) => {
-  
+
   try {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -86,18 +85,10 @@ router.post('/new', [
       auth_token,
       refresh_token
     });
-  } catch (err) {
-  
-    console.log(err)
-    // if(err.original.code == 23505) {
-    //   return res.status(400).json({
-    //     success: false,
-    //     message: 'This account already exists'
-    //   })
-    // }
+  } catch (e) {
     res.status(400).json({
       success: false,
-      error: err
+      error: e.message
     })
   }
 });
@@ -116,14 +107,14 @@ router.get('/checkemail', [
       });
     }
     const { email } = req.query;
-    const user = await User.findOne({where: { email }})
+    const user = await User.findOne({ where: { email } })
     res.status(200).json({
       success: true,
       status: 200,
       exists: !!user
     });
   } catch (err) {
-    res.json(err);
+    res.status(400).json(err);
   }
 });
 

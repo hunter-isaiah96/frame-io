@@ -47,7 +47,14 @@
           :disabled="state.loading_data"
           v-if="state.email_checked && !state.email_exists"
         ></v-text-field>
-        <v-btn @click="authenticate" :disabled="state.loading_data" :loading="state.loading_data" block large>Let's go</v-btn>
+        <v-btn
+          @click="authenticate"
+          :disabled="state.loading_data"
+          :loading="state.loading_data"
+          block
+          large
+          >Let's go</v-btn
+        >
       </v-form>
     </v-card>
   </v-container>
@@ -95,13 +102,13 @@ export default defineComponent({
 
     const setAuthTokens = () => {
       // this.$store.commit('todos/add', e.target.value)
-    }
+    };
 
     const authenticate = async () => {
       if (!emailValidator.validate(auth_form.email)) {
         return;
       }
-      state.loading_data = true
+      state.loading_data = true;
       if (state.email_checked && state.email_exists) {
         // Login
         try {
@@ -115,14 +122,14 @@ export default defineComponent({
           });
           const result = await response.json();
           if (result.success) {
-            document.cookie = `auth_token=${result.auth_token}`
-            localStorage.setItem('refresh_token', result.refresh_token)
-            alert("Successful Login");
+            document.cookie = `auth_token=${result.auth_token}`;
+            localStorage.setItem("refresh_token", result.refresh_token);
           }
         } catch (e) {
           console.log(e);
         } finally {
-          state.loading_data = false
+          state.loading_data = false;
+          window.location.href = "/";
         }
       } else if (state.email_checked) {
         // Register
@@ -137,13 +144,14 @@ export default defineComponent({
           });
           const result = await response.json();
           if (result.success) {
-            localStorage.setItem('token', result.token)
-            alert("Successful Registration");
-          } 
+            localStorage.setItem("token", result.token);
+            document.cookie = `auth_token=${result.auth_token}`;
+          }
         } catch (e) {
           console.log(e);
         } finally {
-          state.loading_data = false
+          state.loading_data = false;
+          window.location.href = "/";
         }
       } else {
         try {
@@ -151,14 +159,14 @@ export default defineComponent({
             `/api/auth/checkemail?email=${auth_form.email}`
           );
           const result = await response.json();
-          if(result.success) {
+          if (result.success) {
             state.email_exists = result.exists;
             state.email_checked = true;
           }
         } catch (err) {
           console.log(err);
         } finally {
-          state.loading_data = false
+          state.loading_data = false;
         }
       }
 

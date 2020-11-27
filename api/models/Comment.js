@@ -4,8 +4,12 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.STRING,
             allowNull: false
         },
+        metaData: {
+            type: DataTypes.JSON,
+            allowNull: true
+        },
         timestamp: {
-            type: DataTypes.NUMBER,
+            type: DataTypes.FLOAT,
             allowNull: true
         },
         file: {
