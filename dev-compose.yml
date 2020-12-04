@@ -38,34 +38,6 @@ services:
     ports:
       - 3000:3000
 
-  mongo:
-    container_name: mongo
-    image: mongo
-    restart: unless-stopped
-
-  elasticsearch:
-    image: docker.elastic.co/elasticsearch/elasticsearch-oss:6.8.10
-    environment:
-      - http.host=0.0.0.0
-      - 'ES_JAVA_OPTS=-Xms512m -Xmx512m'
-      - GRAYLOG_ROOT_PASSWORD_SHA2=8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918
-      - transport.host=localhost
-    ulimits:
-      memlock:
-        soft: -1
-        hard: -1
-    mem_limit: 1
-
-  graylog:
-    image: graylog/graylog:3.3
-    environment:
-      - GRAYLOG_HTTP_EXTERNAL_URI=http://127.0.0.1:9000/
-    ports:
-      - 9000:9000
-      - 12201:12201
-      - 1514:1514
-    restart: unless-stopped
-
 networks:
   postgres:
     driver: bridge
